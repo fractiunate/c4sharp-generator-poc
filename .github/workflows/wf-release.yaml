@@ -1,0 +1,67 @@
+# Releases:
+# https://patriksvensson.se/posts/2020/03/creating-release-artifacts-with-github-actions
+name: "🚢 C4 Release"
+on:
+  release:
+    types: [published]
+
+
+jobs:
+  release:
+    env:
+      c4sharp_cli_version: "1.2.159-beta"
+      c4sharp_version: "5.2.159"
+    name: Release
+    strategy:
+      matrix:
+        dotnet-version: ["6.0.x"]
+        java-version: ["17"]
+        kind: ['linux']
+        include:
+          - kind: linux
+            os: ubuntu-latest
+            target: linux-x64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+      - name: Setup Java SDK ${{ matrix.java-version }}
+        uses: actions/setup-java@v3
+        with:
+          distribution: "microsoft" # See 'https://github.com/actions/setup-java --> Supported distributions' for available options
+          java-version: ${{ matrix.java-version }}
+      - name: Install dependencies
+        shell: bash
+        run: |
+          dotnet tool install --global c4scli --version ${{ env.c4sharp_cli_version }}
+          dotnet add package C4Sharp --version ${{ env.c4sharp_version }}
+          dotnet restore
+        #  build & test // --configuration Debug
+      - name: Build & Test
+        shell: bash
+        run: |
+          dotnet build --configuration Release --no-restore
+          dotnet test --no-restore --verbosity normal
+      - name: Generate Changelog
+        run: |
+          echo "# Versions" > ${{ github.workspace }}-CHANGELOG.txt
+          echo "c4sharp_cli_version: ${{ env.c4sharp_cli_version }}" > ${{ github.workspace }}-CHANGELOG.txt
+          echo "c4sharp_version: ${{ env.c4sharp_version }}" > ${{ github.workspace }}-CHANGELOG.txt
+      - name: Create C4 Artifacts and Zip
+        shell: bash
+        run: |
+          tag=$(git describe --tags --abbrev=0)
+          release_name="c4-archive-$tag-${{ matrix.target }}"
+          # Build everything
+          dotnet run
+          tar czvf "${release_name}-c4.tar.gz" "c4"
+          tar czvf "${release_name}-puml.tar.gz" ".c4s"
+      - name: Publish
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: ${{ github.workspace }}-CHANGELOG.txt
+          files: "c4-archive*"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
