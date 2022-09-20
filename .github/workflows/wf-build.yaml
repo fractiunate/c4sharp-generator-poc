@@ -21,6 +21,10 @@ jobs:
         uses: actions/setup-dotnet@v2
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'microsoft' # See 'https://github.com/actions/setup-java --> Supported distributions' for available options
+          java-version: '17'
       - name: Install dependencies
         run: | 
           dotnet tool install --global c4scli --version ${{ env.c4sharp_cli_version }}
