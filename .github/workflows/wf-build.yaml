@@ -1,7 +1,7 @@
 # https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 # https://learn.microsoft.com/en-us/dotnet/devops/create-dotnet-github-action
 #
-name: "📦 dotnet package"
+name: "📦 C4 - Dev Build"
 
 on: 
   push:
