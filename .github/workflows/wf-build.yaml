@@ -40,8 +40,7 @@ jobs:
         run: |
           dotnet build --configuration Release --no-restore
           dotnet test --no-restore --verbosity normal
-          ls c4/
-          ls .c4s
+          dotnet run
       - uses: actions/upload-artifact@v3
         with:
           name: "dist/.c4s.puml"
