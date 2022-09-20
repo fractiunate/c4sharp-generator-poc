@@ -45,10 +45,8 @@ new PlantumlSession()
 
 b) Using the C4SCLI tool:
 ```cmd
-c4scli build <solution path> [-o <output path>] [-d <html>]
-```
-
-### Setup c4scli
-```cmd
+# Setup c4scli
 dotnet tool install --global c4scli --version 1.2.159-beta
+
+c4scli build <solution path> [-o <output path>] [-d <html>]
 ```
