@@ -14,21 +14,23 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        dotnet-version: ['6.0.x' ]
+        dotnet-version: ['6.0.x']
+        java-version: ['17']
     steps:
       - uses: actions/checkout@v3
       - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
         uses: actions/setup-dotnet@v2
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
-      - uses: actions/setup-java@v3
+      - name: Setup Java SDK ${{ matrix.java-version }} 
+        uses: actions/setup-java@v3
         with:
           distribution: 'microsoft' # See 'https://github.com/actions/setup-java --> Supported distributions' for available options
-          java-version: '17'
+          java-version: ${{ matrix.java-version }}
       - name: Install dependencies
         run: | 
           dotnet tool install --global c4scli --version ${{ env.c4sharp_cli_version }}
-          dotnet add package C4Sharp -version ${{ env.c4sharp_version }}
+          dotnet add package C4Sharp --version ${{ env.c4sharp_version }}
       - name: Install dependencies
         run: dotnet restore
       - name: Build
