@@ -18,7 +18,7 @@ You need these things to run C4Sharp:
 Use the .NET CLI to create a project and add C4Sharp support:
 ```cmd
 dotnet new console -o c4-model-app
-dotnet add package C4Sharp -Version 5.2.159
+dotnet add package C4Sharp -version 5.2.159
 
 # Run Application
 dotnet restore
