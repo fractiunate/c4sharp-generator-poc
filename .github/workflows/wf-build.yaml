@@ -28,7 +28,7 @@ jobs:
       - name: Install dependencies
         run: | 
           dotnet tool install --global c4scli --version ${{ env.c4sharp_cli_version }}
-          dotnet add package C4Sharp -Version ${{ env.c4sharp_version }}
+          dotnet add package C4Sharp -version ${{ env.c4sharp_version }}
       - name: Install dependencies
         run: dotnet restore
       - name: Build
