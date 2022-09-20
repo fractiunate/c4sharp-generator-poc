@@ -1,10 +1,12 @@
+# https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+# https://learn.microsoft.com/en-us/dotnet/devops/create-dotnet-github-action
 name: dotnet package
 
 on: [push]
 
 concurrency:
-   group: ci-${{ github.ref }}
-   cancel-in-progress: true
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -14,26 +16,37 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        dotnet-version: ['6.0.x']
-        java-version: ['17']
+        dotnet-version: ["6.0.x"]
+        java-version: ["17"]
     steps:
       - uses: actions/checkout@v3
       - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
         uses: actions/setup-dotnet@v2
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
-      - name: Setup Java SDK ${{ matrix.java-version }} 
+      - name: Setup Java SDK ${{ matrix.java-version }}
         uses: actions/setup-java@v3
         with:
-          distribution: 'microsoft' # See 'https://github.com/actions/setup-java --> Supported distributions' for available options
+          distribution: "microsoft" # See 'https://github.com/actions/setup-java --> Supported distributions' for available options
           java-version: ${{ matrix.java-version }}
       - name: Install dependencies
-        run: | 
+        run: |
           dotnet tool install --global c4scli --version ${{ env.c4sharp_cli_version }}
           dotnet add package C4Sharp --version ${{ env.c4sharp_version }}
       - name: Install dependencies
         run: dotnet restore
       - name: Build
-        run: dotnet build --configuration Release --no-restore
-      - name: Test
-        run: dotnet test --no-restore --verbosity normal
+        #  build & test // --configuration Debug
+        run: |
+          dotnet build --configuration Release --no-restore
+          dotnet test --no-restore --verbosity normal
+          ls c4/
+          ls .c4s
+      - uses: actions/upload-artifact@v3
+        with:
+          name: "dist/.c4s.puml"
+          path: ".c4s"
+      - uses: actions/upload-artifact@v3
+        with:
+          name: "dist/c4"
+          path: "c4s"
