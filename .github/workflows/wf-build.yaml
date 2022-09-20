@@ -51,4 +51,4 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: "dist-c4"
-          path: "c4s"
+          path: "c4"
