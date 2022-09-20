@@ -1,5 +1,8 @@
 # https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 # https://learn.microsoft.com/en-us/dotnet/devops/create-dotnet-github-action
+#
+# Releases:
+# https://patriksvensson.se/posts/2020/03/creating-release-artifacts-with-github-actions
 name: dotnet package
 
 on: [push]
@@ -43,9 +46,9 @@ jobs:
           dotnet run
       - uses: actions/upload-artifact@v3
         with:
-          name: "dist/.c4s.puml"
+          name: "dist-c4s-puml"
           path: ".c4s"
       - uses: actions/upload-artifact@v3
         with:
-          name: "dist/c4"
+          name: "dist-c4"
           path: "c4s"
