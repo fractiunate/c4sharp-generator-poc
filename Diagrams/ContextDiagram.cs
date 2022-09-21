@@ -13,7 +13,7 @@ namespace C4Sharp.Sample.Diagrams
 
     public class ContextDiagram : DiagramBuildRunner
     {
-        protected override string Title => "System Context diagram for Internet Banking System";
+        protected override string Title => "[System Landscape] Global Sports Group";
         protected override DiagramType DiagramType => DiagramType.Context;
 
         protected override IEnumerable<Structure> Structures() => new Structure[]
@@ -21,12 +21,17 @@ namespace C4Sharp.Sample.Diagrams
             Customer,
             BankingSystem,
             Mainframe,
-            MailSystem
+            MailSystem,
+            Webshop,
+            XtCommerce
         };
 
         protected override IEnumerable<Relationship> Relationships() => new[]
         {
-            (Customer > BankingSystem).AddTags("error"),
+            (Customer > XtCommerce).AddTags("error"),
+            (Customer > Webshop).AddTags("ok"),
+            (Webshop > XtCommerce),
+            (Customer > BankingSystem).AddTags("replace"),
             (Customer < MailSystem)["Sends e-mails to"],
             (BankingSystem > MailSystem)["Sends e-mails", "SMTP"][Neighbor],
             BankingSystem > Mainframe,
@@ -34,16 +39,12 @@ namespace C4Sharp.Sample.Diagrams
 
         protected override IElementStyle? SetStyle()
         {
-            return new ElementStyle()
-                .UpdateElementStyle(ElementName.ExternalPerson, "#7f3b08", "#7f3b08")
-                .UpdateElementStyle(ElementName.Person, "#55ACEE", "#55ACEE")
-                .UpdateElementStyle(ElementName.ExternalSystem, "#3F6684", shape: Shape.RoundedBoxShape);
+            return ElementStyles.ContextStyle;
         }
 
         protected override IRelationshipTag? SetRelTags()
         {
-            return new RelationshipTag()
-                .AddRelTag("error", "red", "red", LineStyle.DashedLine);
+            return RelationshipTags.ContextTags;
         }
     }
 }

@@ -39,4 +39,25 @@ public static class Systems
         Description = "The internal Microsoft Exchange e-mail system.",
         Boundary = Boundary.External
     };
+
+
+    // GSP
+
+    private static SoftwareSystem? _webshop;
+    public static SoftwareSystem Webshop => _webshop ??= new SoftwareSystem(
+        "Webshop",
+        "Website")
+    {
+        Description = "Frontend Website hosted on Domain xyz.example.com",
+        Boundary = Boundary.External
+    };
+
+    private static SoftwareSystem? _xtCommerce;
+    public static SoftwareSystem XtCommerce => _xtCommerce ??= new SoftwareSystem(
+        "xtCommerce",
+        "Onlineshop solution")
+    {
+        Description = "E-Commerce System for shop management and payment integration.",
+        Boundary = Boundary.External
+    };
 }
